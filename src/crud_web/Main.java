@@ -1,4 +1,5 @@
 package crud_web;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -10,6 +11,7 @@ public class Main extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
     private ProductDAO productDAO;
+    private int selectedProductId;
 
     public Main() {
         productDAO = new ProductDAO();
@@ -34,6 +36,15 @@ public class Main extends JFrame {
         tableModel.addColumn("Cor");
 
         table = new JTable(tableModel);
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    selectedProductId = (int) tableModel.getValueAt(selectedRow, 0);
+                }
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -46,6 +57,22 @@ public class Main extends JFrame {
             }
         });
 
+        JButton updateButton = new JButton("Atualizar");
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateProduct();
+            }
+        });
+
+        JButton deleteButton = new JButton("Excluir");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteProduct();
+            }
+        });
+
         JButton refreshButton = new JButton("Atualizar Tabela");
         refreshButton.addActionListener(new ActionListener() {
             @Override
@@ -55,6 +82,8 @@ public class Main extends JFrame {
         });
 
         buttonPanel.add(addButton);
+        buttonPanel.add(updateButton);
+        buttonPanel.add(deleteButton);
         buttonPanel.add(refreshButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -90,11 +119,18 @@ public class Main extends JFrame {
     }
 
     private void addProduct() {
-        // Janela de diálogo para coletar informações do produto
         JTextField fabricanteField = new JTextField();
         JTextField nomeField = new JTextField();
         JTextField marcaField = new JTextField();
-        // ... (adicionar outros campos conforme necessário)
+        JTextField modeloField = new JTextField();
+        JTextField categoriaField = new JTextField();
+        JTextField descricaoField = new JTextField();
+        JTextField unidadeMedidaField = new JTextField();
+        JTextField larguraField = new JTextField();
+        JTextField alturaField = new JTextField();
+        JTextField profundidadeField = new JTextField();
+        JTextField pesoField = new JTextField();
+        JTextField corField = new JTextField();
 
         JPanel panel = new JPanel(new GridLayout(0, 2));
         panel.add(new JLabel("Fabricante:"));
@@ -103,27 +139,129 @@ public class Main extends JFrame {
         panel.add(nomeField);
         panel.add(new JLabel("Marca:"));
         panel.add(marcaField);
-        // ... (adicionar outros campos conforme necessário)
+        panel.add(new JLabel("modelo:"));
+        panel.add(modeloField);
+        panel.add(new JLabel("categoria:"));
+        panel.add(categoriaField);
+        panel.add(new JLabel("descricao:"));
+        panel.add(descricaoField);
+        panel.add(new JLabel("unidadeMedida:"));
+        panel.add(unidadeMedidaField);
+        panel.add(new JLabel("largura:"));
+        panel.add(larguraField);
+        panel.add(new JLabel("altura:"));
+        panel.add(alturaField);
+        panel.add(new JLabel("profundidade:"));
+        panel.add(profundidadeField);
+        panel.add(new JLabel("peso:"));
+        panel.add(pesoField);
+        panel.add(new JLabel("cor:"));
+        panel.add(corField);
 
         int result = JOptionPane.showConfirmDialog(null, panel, "Adicionar Produto",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Criar um novo objeto Product com os valores inseridos
             Product newProduct = new Product();
             newProduct.setFabricante(fabricanteField.getText());
             newProduct.setNome(nomeField.getText());
             newProduct.setMarca(marcaField.getText());
-            // ... (definir outros atributos conforme necessário)
+            newProduct.setModelo(modeloField.getText());
+            newProduct.setIdCategoria(Integer.parseInt(categoriaField.getText()));
+            newProduct.setDescricao(descricaoField.getText());
+            newProduct.setUnidadeMedida(unidadeMedidaField.getText());
+            newProduct.setLargura(Double.parseDouble(larguraField.getText()));
+            newProduct.setAltura(Double.parseDouble(alturaField.getText()));
+            newProduct.setProfundidade(Double.parseDouble(profundidadeField.getText()));
+            newProduct.setPeso(Double.parseDouble(pesoField.getText()));
+            newProduct.setCor(corField.getText());
 
-            // Adicionar o produto ao banco de dados
             productDAO.addProduct(newProduct);
-
-            // Atualizar a tabela após adicionar o produto
             refreshTable();
         }
     }
 
+    private void updateProduct() {
+        JTextField fabricanteField = new JTextField();
+        JTextField nomeField = new JTextField();
+        JTextField marcaField = new JTextField();
+        JTextField modeloField = new JTextField();
+        JTextField descricaoField = new JTextField();
+        JTextField unidadeMedidaField = new JTextField();
+        JTextField larguraField = new JTextField();
+        JTextField alturaField = new JTextField();
+        JTextField profundidadeField = new JTextField();
+        JTextField pesoField = new JTextField();
+        JTextField corField = new JTextField();
+
+        Product selectedProduct = productDAO.getProductById(selectedProductId);
+
+        fabricanteField.setText(selectedProduct.getFabricante());
+        nomeField.setText(selectedProduct.getNome());
+        marcaField.setText(selectedProduct.getMarca());
+        modeloField.setText(selectedProduct.getModelo());
+        descricaoField.setText(selectedProduct.getDescricao());
+        unidadeMedidaField.setText(selectedProduct.getUnidadeMedida());
+        larguraField.setText(String.valueOf(selectedProduct.getLargura()));
+        alturaField.setText(String.valueOf(selectedProduct.getAltura()));
+        profundidadeField.setText(String.valueOf(selectedProduct.getProfundidade()));
+        pesoField.setText(String.valueOf(selectedProduct.getPeso()));
+        corField.setText(selectedProduct.getCor());
+
+        JPanel panel = new JPanel(new GridLayout(0, 2));
+        panel.add(new JLabel("Fabricante:"));
+        panel.add(fabricanteField);
+        panel.add(new JLabel("Nome:"));
+        panel.add(nomeField);
+        panel.add(new JLabel("Marca:"));
+        panel.add(marcaField);
+        panel.add(new JLabel("modelo:"));
+        panel.add(modeloField);
+        panel.add(new JLabel("descricao:"));
+        panel.add(descricaoField);
+        panel.add(new JLabel("unidadeMedida:"));
+        panel.add(unidadeMedidaField);
+        panel.add(new JLabel("largura:"));
+        panel.add(larguraField);
+        panel.add(new JLabel("altura:"));
+        panel.add(alturaField);
+        panel.add(new JLabel("profundidade:"));
+        panel.add(profundidadeField);
+        panel.add(new JLabel("peso:"));
+        panel.add(pesoField);
+        panel.add(new JLabel("cor:"));
+        panel.add(corField);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Atualizar Produto",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            selectedProduct.setFabricante(fabricanteField.getText());
+            selectedProduct.setNome(nomeField.getText());
+            selectedProduct.setMarca(marcaField.getText());
+            selectedProduct.setModelo(modeloField.getText());
+            selectedProduct.setDescricao(descricaoField.getText());
+            selectedProduct.setUnidadeMedida(unidadeMedidaField.getText());
+            selectedProduct.setLargura(Double.parseDouble(larguraField.getText()));
+            selectedProduct.setAltura(Double.parseDouble(alturaField.getText()));
+            selectedProduct.setProfundidade(Double.parseDouble(profundidadeField.getText()));
+            selectedProduct.setPeso(Double.parseDouble(pesoField.getText()));
+            selectedProduct.setCor(corField.getText());
+
+            productDAO.updateProduct(selectedProduct);
+            refreshTable();
+        }
+    }
+
+    private void deleteProduct() {
+        int confirmDialog = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o produto?", "Confirmar exclusão",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirmDialog == JOptionPane.YES_OPTION) {
+            productDAO.deleteProduct(selectedProductId);
+            refreshTable();
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -134,4 +272,3 @@ public class Main extends JFrame {
         });
     }
 }
-

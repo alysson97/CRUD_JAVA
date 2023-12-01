@@ -28,8 +28,8 @@ public class DBConnection {
 		this.setHost	("localhost");
 		this.setPort	("3306");
 		this.setSchema	("lojinha");
-		this.setUser	("cleber");
-		this.setPassword("senha");
+		this.setUser	("usuario");
+		this.setPassword("ifsp@123");
 		this.doConnection();
 	}
 	
