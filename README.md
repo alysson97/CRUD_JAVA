@@ -1,5 +1,5 @@
-Projeto CRUD em Java usando Swing
-Este é um projeto simples de CRUD (Create, Read, Update, Delete) em Java utilizando a biblioteca Swing para a interface gráfica. O projeto consiste em um sistema de gerenciamento de produtos com funcionalidades básicas.
+🚀 Sistema de Gerenciamento de Produtos em Java com Swing
+#Este é um projeto simples de CRUD (Create, Read, Update, Delete) em Java utilizando a biblioteca Swing para a interface gráfica. O projeto consiste em um sistema de gerenciamento de produtos com funcionalidades básicas.
 
 📁 Arquivos do Projeto
 1. Main
